@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -9,10 +9,23 @@ import Singer from "./Singer"
 import Counter from './counter'
 import Batsman from './Batsman'
 import Bowler from './Bowler'
+import Users from './Users'
+import Friends from './Friends'
+import Players from './Players'
 
 import Library from './library'
 
+const fetchUsers = fetch("https://jsonplaceholder.typicode.com/users")
+.then(res => res.json())
+
+const fetchFriends = async() => {
+  const res = await fetch("https://jsonplaceholder.typicode.com/users");
+  return res.json();
+}
+
 function App() {
+
+  const friendsPromise = fetchFriends();
   const [count, setCount] = useState(0)
 
   // const time = 50;
@@ -46,6 +59,7 @@ function App() {
   
   return (
     <>
+    <Players></Players>
     <button onClick={handleClick}>click</button>
     <button onClick={function handleClick2(){
       alert("clicked 2")
@@ -54,6 +68,12 @@ function App() {
     <button onClick={() => alert("clicked 4")}>click 4</button>
     <button onClick={() => handleClick5(5)}>click 5</button>
     <Counter></Counter>
+    <Suspense fallback = {<h2>Loading...</h2>}>
+      <Users fetchUser ={fetchUsers}></Users>
+    </Suspense>
+    <Suspense fallback={<h3>Lorem ipsum dolor sit....</h3>}>
+    <Friends friendsPromise={friendsPromise}></Friends>
+    </Suspense>
     <Batsman></Batsman>
     <Bowler></Bowler>
       <div>
